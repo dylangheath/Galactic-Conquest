@@ -1,0 +1,128 @@
+local BreakAbleItems = game.Workspace:WaitForChild("BreakableItems")
+local Rocks = BreakAbleItems:WaitForChild("Rocks")
+local Trees = BreakAbleItems:WaitForChild("Trees")
+local Ores = game.ReplicatedStorage:WaitForChild("Ores")
+local Items = game.ReplicatedStorage:WaitForChild("Items")
+
+
+for i, v in pairs(game.Workspace.BreakableItems.Trees:GetChildren()) do 
+	game:GetService("CollectionService"):AddTag(v, "Breakable")
+end
+
+for i, v in pairs(game.Workspace.BreakableItems.Rocks:GetChildren()) do 
+	game:GetService("CollectionService"):AddTag(v, "Breakable")
+end
+
+Rocks.Rock1.Broken.OnServerEvent:Connect(function()
+	wait()
+	Rocks.Rock1.Transparency = 1
+	Rocks.Rock1.CanCollide = false
+	local CrystalCount = 0
+	
+	repeat 
+		CrystalCount = CrystalCount + 1
+		local CrystalClone = Ores.Crystal:Clone()
+		CrystalClone.Parent = game.Workspace
+		CrystalClone.Position = Rocks.Rock1.Position
+	until CrystalCount == 4
+
+	wait(15)
+	Rocks.Rock1.Transparency = 0
+	Rocks.Rock1.CanCollide = true
+end)
+
+Rocks.Rock2.Broken.OnServerEvent:Connect(function()
+	wait()
+	Rocks.Rock2.Transparency = 1
+	Rocks.Rock2.CanCollide = false
+	
+	local CrystalCount = 0
+
+	repeat 
+		CrystalCount = CrystalCount + 1
+		local CrystalClone = Ores.Crystal:Clone()
+		CrystalClone.Parent = game.Workspace
+		CrystalClone.Position = Rocks.Rock2.Position
+	until CrystalCount == 4
+	
+	
+	wait(15)
+	Rocks.Rock2.Transparency = 0
+	Rocks.Rock2.CanCollide = true
+end)
+
+Rocks.Rock3.Broken.OnServerEvent:Connect(function()
+	wait()
+	Rocks.Rock3.Transparency = 1
+	Rocks.Rock3.CanCollide = false
+	
+	local CrystalCount = 0
+
+	repeat 
+		CrystalCount = CrystalCount + 1
+		local CrystalClone = Ores.Crystal:Clone()
+		CrystalClone.Parent = game.Workspace
+		CrystalClone.Position = Rocks.Rock3.Position
+	until CrystalCount == 4
+	
+	wait(15)
+	Rocks.Rock3.Transparency = 0
+	Rocks.Rock3.CanCollide = true
+end)
+
+Trees.Tree1.Broken.OnServerEvent:Connect(function()
+	wait()
+	Trees.Tree1.Transparency = 1
+	Trees.Tree1.CanCollide = false
+
+	local WoodCount = 0
+
+	repeat 
+		WoodCount = WoodCount + 1
+		local WoodClone = Items.Wood:Clone()
+		WoodClone.Parent = game.Workspace
+		WoodClone.Position = Trees.Tree1.Position
+	until WoodCount == 4
+
+	wait(15)
+	Trees.Tree1.Transparency = 0
+	Trees.Tree1.CanCollide = true
+end)
+
+Trees.Tree2.Broken.OnServerEvent:Connect(function()
+	wait()
+	Trees.Tree2.Transparency = 1
+	Trees.Tree2.CanCollide = false
+
+	local WoodCount = 0
+
+	repeat 
+		WoodCount = WoodCount + 1
+		local WoodClone = Items.Wood:Clone()
+		WoodClone.Parent = game.Workspace
+		WoodClone.Position = Trees.Tree2.Position
+	until WoodCount == 4
+
+	wait(15)
+	Trees.Tree2.Transparency = 0
+	Trees.Tree2.CanCollide = true
+end)
+
+Trees.Tree3.Broken.OnServerEvent:Connect(function()
+	wait()
+	Trees.Tree3.Transparency = 1
+	Trees.Tree3.CanCollide = false
+
+	local WoodCount = 0
+
+	repeat 
+		WoodCount = WoodCount + 1
+		local WoodClone = Items.Wood:Clone()
+		WoodClone.Parent = game.Workspace
+		WoodClone.Position = Trees.Tree3.Position
+	until WoodCount == 4
+
+	wait(15)
+	Trees.Tree3.Transparency = 0
+	Trees.Tree3.CanCollide = true
+end)
