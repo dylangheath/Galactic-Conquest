@@ -1,0 +1,111 @@
+local CollectionService = game:GetService("CollectionService")
+local TweenService = game:GetService("TweenService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Breakableitems = game.Workspace:WaitForChild("BreakableItems")
+
+
+local Tool = script.Parent
+local Handle = Tool:WaitForChild("Handle")
+local Laser = ReplicatedStorage.Tools:WaitForChild("LaserGunLaser")
+local Mouse = false
+local Activated = false
+local Melting = false
+
+
+--ItemMeltingTimeVairables--
+local RockMeltingTime = 400
+
+
+
+
+
+
+local LaserSpeed = 150
+local Reverse = false
+local Damage = 5
+
+
+
+
+local NewTweenInfo = TweenInfo.new(
+	1,
+	Enum.EasingStyle.Linear,
+	Enum.EasingDirection.Out,
+	0,
+	Reverse,
+	0
+)
+
+
+local RoutineConnection
+local Routine = function(step)
+	-- Runs every frame that tool is equipped
+	if Activated then
+		Melting = true
+		local Target = Mouse.Target
+		if Target then
+			if CollectionService:HasTag(Target, "Breakable") then
+				
+				--TweenSystem--
+				local Rocktween = TweenService:Create(Target, NewTweenInfo, {Size = Vector3.new(5.65, 4.87, 5.26)})
+				
+				
+				
+			
+				local MeltingTime = Target:FindFirstChild("MeltingTime")
+				local TargetGroupName = nil
+				if Target.Parent == Breakableitems:WaitForChild("Rocks") then
+					TargetGroupName = "Rocks"
+				end
+				
+				if Target.Material == Enum.Material.Slate and Target.Transparency ~= 1 and Melting == true then
+					wait()	
+					if MeltingTime.Value == 0 then
+						if TargetGroupName == "Rocks" then
+							Target.Color = Color3.fromRGB(255, 0, 0)
+							Target.Size = Vector3.new(4.65, 2.87, 4.26)
+							MeltingTime.Value = RockMeltingTime
+							Target.Broken:FireServer()
+						else
+							Target.Broken:FireServer()
+						end
+						
+						
+					else
+						MeltingTime.Value = MeltingTime.Value - 5
+						print(MeltingTime.Value)
+						Rocktween:Play()
+						wait()
+					end
+					Rocktween:Cancel()
+					if Melting == false then
+						MeltingTime.Value = RockMeltingTime
+					end
+				end
+				
+			end
+		end	
+	end
+end
+Tool.Equipped:connect(function(Mouse_)
+	Mouse = Mouse_
+	if RoutineConnection then
+		RoutineConnection:disconnect()
+		RoutineConnection = false
+	end
+	RoutineConnection = game:GetService("RunService").Heartbeat:connect(Routine)
+end)
+Tool.Activated:connect(function()
+	Activated = true
+end)
+Tool.Deactivated:connect(function()
+	Activated = false
+	Melting = false
+end)
+Tool.Unequipped:connect(function()
+	Activated = false
+	if RoutineConnection then
+		RoutineConnection:disconnect()
+		RoutineConnection = false
+	end
+end)
