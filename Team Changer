@@ -1,0 +1,48 @@
+local DataManager = require(game:GetService("ServerScriptService").Data.DataManager)
+local Network = require(game.ReplicatedStorage.Utilities.Network.Network) -- TODO: Use network module and remove remotes, used remotes for debugging
+
+local players = game:GetService("Players")
+local teams = game:GetService("Teams")
+local replicatedStorage = game:GetService("ReplicatedStorage")
+
+local remotes = replicatedStorage.Remotes
+local teamSwitch = remotes.TeamSwitch
+
+function PlayerAdded(player)
+	print(player.Name)
+	repeat task.wait() until DataManager:Get(player)
+	local data = DataManager:Get(player)
+	print(data) -- > prints nil for some reason?
+	--repeat task.wait() until data ~= nil
+	print(data.CurrentSlot)
+	local slot = data[data.CurrentSlot].Slot
+	local faction = slot.Faction
+	
+	player.Team = teams[faction]
+	if faction == "GalacticCartels" then teamSwitch:FireClient() end
+end
+
+function PlayerRemoving(player)
+	
+end
+
+teamSwitch.OnServerEvent:Connect(function(player, toSwitch)
+	local data = DataManager:Get(player)
+	
+	local slot = data[data.CurrentSlot].Slot
+	local faction = slot.Faction
+	if faction == "GalacticCartels" then
+		if toSwitch == "SithEmpire" or toSwitch == "GalacticRepublic" then
+			teamSwitch:FireClient(player)
+		end
+	end
+end)
+
+players.PlayerAdded:Connect(PlayerAdded)
+players.PlayerRemoving:Connect(PlayerRemoving)
+
+for _, player in ipairs(players:GetPlayers()) do
+	task.spawn(function()
+		PlayerAdded(player)
+	end)
+end
